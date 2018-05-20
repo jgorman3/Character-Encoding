@@ -1,5 +1,5 @@
 # CharEncoding
-A C function that converts UTF-8 Data into various encoding schemes
+A C function that converts UTF-8 data into various encoding schemes
 
 Encodings: UTF-16BE, UTF-16LE, UTF-32BE, UTF-32LE
 
