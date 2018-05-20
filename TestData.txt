@@ -1,0 +1,5 @@
+I love to program in C, Java, Python, Verilog, and x86 Assembly. Some of my emotions are the following 😀,😡,🕺, and ✌️. 
+I like to play many sports, but my two favorites are 🎾 and 🏄‍♂️. I can say hello in many different languages such as, 
+¡Hola! (Spanish), Здравствуйте (Russian), 你好 (Mandarin), שלום (Hebrew), مرحبا (Arabic), Grüezi mitenand 
+(Swiss German, Plural), 안녕하세요 (Korean), こんにちは (Japanese), and Dia dhaoibh (Irish). Now, Let’s try to encode 
+all of this!
