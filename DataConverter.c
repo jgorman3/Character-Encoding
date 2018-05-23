@@ -11,23 +11,25 @@
 #define replaceChar16 0xFFFD
 #define replaceChar32 0x0000FFFD
 int utf8octets = 0;
-uint32_t codepoint = 0x00;
+uint8_t codepoint = 0x00;
+int j = 0;
 
 //checks legality of UTF data being passed from txt file
-int isUTF8Legal (uint32_t fileData)
+int isUTF8Legal (uint8_t fileData)
 {
-  return fileData <= 0x0000007F
+  /*return fileData <= 0x0000007F
         && (fileData >= 0x0000C080 && fileData <= 0x0000DFBF)
         && (fileData >= 0x00E08080 && fileData <= 0x00EFBFBF)
-        && (fileData >= 0xF0808080 && fileData <= 0xF7BFBFBF);
+        && (fileData >= 0xF0808080 && fileData <= 0xF7BFBFBF);*/
+  return 0;
 }
 
-uint32_t UTF8toCodeP (uint32_t fileData[])
+uint8_t UTF8toCodeP (uint8_t fileData[])
 {
-  int j = 0;
   if (fileData[j] <= 0x7F) {
     codepoint = fileData[j];
     return codepoint;
+    printf("%c",'\n');
 
   //two bytes
 } else if ((fileData[j] >= 0xC0) && (fileData[j] <= 0xDF)) {
@@ -48,7 +50,7 @@ uint32_t UTF8toCodeP (uint32_t fileData[])
   }
 }
 
-int UTF16BE (uint32_t fileData)
+int UTF16BE (uint8_t fileData)
 {
   //uint32_t be16DataArray[utf8octets];
   if (!isUTF8Legal(fileData)) {
@@ -58,7 +60,7 @@ int UTF16BE (uint32_t fileData)
   return 0;
 }
 
-int UTF16LE (uint32_t fileData)
+int UTF16LE (uint8_t fileData)
 {
   //uint32_t le16DataArray[utf8octets];
   if (!isUTF8Legal(fileData)) {
@@ -68,7 +70,7 @@ int UTF16LE (uint32_t fileData)
   return 0;
 }
 
-int UTF32BE (uint32_t fileData)
+int UTF32BE (uint8_t fileData)
 {
   //uint32_t be32DataArray[utf8octets];
   if (!isUTF8Legal(fileData)) {
@@ -80,7 +82,7 @@ int UTF32BE (uint32_t fileData)
   return 0;
 }
 
-int UTF32LE (uint32_t fileData)
+int UTF32LE (uint8_t fileData)
 {
   //uint32_t le32DataArray[utf8octets];
   if (!isUTF8Legal(fileData)) {
@@ -94,7 +96,7 @@ int UTF32LE (uint32_t fileData)
 
 int main ( void )
 {
-  uint32_t buffer[BUFFER_LENGTH];
+  uint8_t buffer[BUFFER_LENGTH];
 
   while (true)
   {
