@@ -15,82 +15,84 @@ uint8_t codepoint = 0x00;
 int j = 0;
 
 //checks legality of UTF data being passed from txt file
-int isUTF8Legal (uint8_t fileData)
+/*int isUTF8Legal (uint8_t fileData[])
 {
-  /*return fileData <= 0x0000007F
-        && (fileData >= 0x0000C080 && fileData <= 0x0000DFBF)
-        && (fileData >= 0x00E08080 && fileData <= 0x00EFBFBF)
-        && (fileData >= 0xF0808080 && fileData <= 0xF7BFBFBF);*/
-  return 0;
-}
+  return fileData <= 0x7F
+        && (fileData >= 0xC080 && fileData <= 0xDFBF)
+        && (fileData >= 0xE08080 && fileData <= 0xEFBFBF)
+        && (fileData >= 0xF0808080 && fileData <= 0xF7BFBFBF);
+}*/
 
-uint8_t UTF8toCodeP (uint8_t fileData[])
+int UTF8toCodeP (uint8_t fileData[])
 {
   if (fileData[j] <= 0x7F) {
     codepoint = fileData[j];
-    return codepoint;
-    printf("%c",'\n');
+    printf("%08X\n",codepoint);
+    return 0;
 
   //two bytes
 } else if ((fileData[j] >= 0xC0) && (fileData[j] <= 0xDF)) {
     codepoint = ((fileData[j] & 0x1F) << 6) | ((fileData[j + 1]) & 0x3F);
-    return codepoint;
+    printf("%08X\n",codepoint);
+    return 0;
 
   //three bytes
 } else if ((fileData[j] >= 0xE0) && (fileData[j] <= 0xEF)) {
     codepoint = (((fileData[j] & 0x0F) << 12) | (((fileData[j + 1]) & 0x3F) << 6) |
     ((fileData[j + 2]) & 0x3F));
-    return codepoint;
+    printf("%08X\n",codepoint);
+    return 0;
   //four bytes
 } else //((fileData >= 0xF0) && (fileData <= 0xF7)) {
   {
     codepoint = (((fileData[j] & 0x07) << 18) | ((fileData[j+1] & 0x3F) << 12) |
     ((fileData[j+2] & 0x3F) <<  6) | ((fileData[j+3] & 0x3F)));
-    return codepoint;
+    printf("%08X\n",codepoint);
+    return 0;
   }
 }
 
 int UTF16BE (uint8_t fileData)
 {
   //uint32_t be16DataArray[utf8octets];
-  if (!isUTF8Legal(fileData)) {
+  /*if (!isUTF8Legal(fileData)) {
     putchar(0xFF);
     putchar(0xFD);
-  }
+  }*/
   return 0;
 }
 
 int UTF16LE (uint8_t fileData)
 {
   //uint32_t le16DataArray[utf8octets];
-  if (!isUTF8Legal(fileData)) {
+  /*if (!isUTF8Legal(fileData)) {
     putchar(0xFD);
     putchar(0xFF);
-  }
+  }*/
   return 0;
 }
 
 int UTF32BE (uint8_t fileData)
 {
   //uint32_t be32DataArray[utf8octets];
-  if (!isUTF8Legal(fileData)) {
+  /*if (!isUTF8Legal(fileData)) {
     putchar(0x00);
     putchar(0x00);
     putchar(0xFF);
     putchar(0xFD);
-  }
+  }*/
   return 0;
 }
 
 int UTF32LE (uint8_t fileData)
 {
   //uint32_t le32DataArray[utf8octets];
-  if (!isUTF8Legal(fileData)) {
+  /*if (!isUTF8Legal(fileData)) {
     putchar(0x00);
     putchar(0x00);
     putchar(0xFD);
     putchar(0xFF);
-  }
+  }*/
   return 0;
 }
 
@@ -106,7 +108,7 @@ int main ( void )
       break;
     }
     for (int i = 0; i < utf8octets; i++) {
-      printf("%X\n",UTF8toCodeP(&buffer[i]));
+      UTF8toCodeP(&buffer[i]);
     }
   }
   return 0;
