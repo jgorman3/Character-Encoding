@@ -23,33 +23,68 @@ int j = 0;
         && (fileData >= 0xF0808080 && fileData <= 0xF7BFBFBF);
 }*/
 
-int UTF8toCodeP (uint8_t fileData[])
+int UTF8toCodeP (uint8_t fileData)
 {
-  if (fileData[j] <= 0x7F) {
-    codepoint = fileData[j];
+  //if (fileData <= 0x7F) {
+    codepoint = fileData;
     printf("%08X\n",codepoint);
     return 0;
 
   //two bytes
-} else if ((fileData[j] >= 0xC0) && (fileData[j] <= 0xDF)) {
-    codepoint = ((fileData[j] & 0x1F) << 6) | ((fileData[j + 1]) & 0x3F);
-    printf("%08X\n",codepoint);
-    return 0;
+//} //else if ((fileData >= 0xC0) && (fileData <= 0xDF)) {
+  //this should be able to handle multiple bytes
+  //  codepoint = ((fileData & 0x1F) << 6) | ((fileData) & 0x3F);
+  //  printf("%08X\n",codepoint);
+  //  return 0;
 
   //three bytes
-} else if ((fileData[j] >= 0xE0) && (fileData[j] <= 0xEF)) {
-    codepoint = (((fileData[j] & 0x0F) << 12) | (((fileData[j + 1]) & 0x3F) << 6) |
-    ((fileData[j + 2]) & 0x3F));
-    printf("%08X\n",codepoint);
-    return 0;
+//} //else if ((fileData >= 0xE0) && (fileData <= 0xEF)) {
+  //this should be able to handle multiple bytes
+  //  codepoint = (((fileData & 0x0F) << 12) | (((fileData) & 0x3F) << 6) |
+  //  ((fileData) & 0x3F));
+  //  printf("%08X\n",codepoint);
+  //  return 0;
   //four bytes
-} else //((fileData >= 0xF0) && (fileData <= 0xF7)) {
-  {
-    codepoint = (((fileData[j] & 0x07) << 18) | ((fileData[j+1] & 0x3F) << 12) |
-    ((fileData[j+2] & 0x3F) <<  6) | ((fileData[j+3] & 0x3F)));
-    printf("%08X\n",codepoint);
-    return 0;
-  }
+//} //else //((fileData >= 0xF0) && (fileData <= 0xF7)) {
+  //{
+    //this should be able to handle multiple bytes
+    //codepoint = (((fileData & 0x07) << 18) | ((fileData & 0x3F) << 12) |
+    //((fileData & 0x3F) <<  6) | ((fileData & 0x3F)));
+    //printf("%08X\n",codepoint);
+    //return 0;
+  //}
+}
+
+int twoFrames(uint8_t byte1,uint8_t byte2)
+{
+  char char1[4];
+  sprintf(char1,"%d%d",byte1,byte2);
+  uint8_t intframe1 = (uint8_t)strtol(char1,NULL,16);
+  uint8_t codepoint1 = ((intframe1 & 0x1F) << 6) | ((intframe1) & 0x3F);
+  printf("%08X\n",codepoint1);
+  return 0;
+}
+
+int threeFrames(uint8_t byte1,uint8_t byte2,uint8_t byte3)
+{
+  char char2[6];
+  sprintf(char2,"%d%d%d",byte1,byte2,byte3);
+  uint8_t intframe2 = (uint8_t)strtol(char2,NULL,16);
+  uint8_t codepoint2 = (((intframe2 & 0x0F) << 12) | (((intframe2) & 0x3F) << 6) |
+  ((intframe2) & 0x3F));
+  printf("%08X\n",codepoint2);
+  return 0;
+}
+
+int fourFrames(uint8_t byte1,uint8_t byte2,uint8_t byte3, uint8_t byte4)
+{
+  char char3[8];
+  sprintf(char3,"%d%d%d%d",byte1,byte2,byte3,byte4);
+  uint8_t intframe3 = (uint8_t)strtol(char3,NULL,16);
+  uint8_t codepoint3 = (((intframe3 & 0x07) << 18) | ((intframe3 & 0x3F) << 12) |
+  ((intframe3 & 0x3F) <<  6) | ((intframe3 & 0x3F)));
+  printf("%08X\n",codepoint3);
+  return 0;
 }
 
 int UTF16BE (uint8_t fileData)
@@ -108,7 +143,23 @@ int main ( void )
       break;
     }
     for (int i = 0; i < utf8octets; i++) {
-      UTF8toCodeP(&buffer[i]);
+      if (buffer[i] < 0x7F)
+      {
+        UTF8toCodeP(buffer[i]);
+      }
+      else if ((buffer[i] >= 0xC0) && (buffer[i] <= 0xDF))
+      {
+        twoFrames(buffer[i],buffer[i+1]);
+      }
+      else if ((buffer[i] >= 0xE0) && (buffer[i] <= 0xEF))
+      {
+        threeFrames(buffer[i],buffer[i+1],buffer[i+2]);
+      }
+      else
+      {
+        fourFrames(buffer[i],buffer[i+1],buffer[i+2],buffer[i+3]);
+      }
+      //printf("%X\n",buffer[i]);
     }
   }
   return 0;
