@@ -26,39 +26,42 @@ int j = 0;
 int UTF8toCodeP (uint8_t fileData)
 {
   //if (fileData <= 0x7F) {
-    codepoint = fileData;
-    printf("%08X\n",codepoint);
-    return 0;
+  codepoint = fileData;
+  printf("%08X\n",codepoint);
+  return 0;
 }
 
 int twoFrames(uint8_t byte1,uint8_t byte2)
 {
-  char char1[4];
-  sprintf(char1,"%d%d",byte1,byte2);
-  int intframe1 = (int)strtol(char1,NULL,16);
-  uint8_t codepoint1 = ((intframe1 & 0x1F) << 6) | ((intframe1) & 0x3F);
+  //char char1[8];
+  //sprintf(char1,"%x%x",byte1,byte2);
+  //int intframe1 = (int)strtol(char1,NULL,16);
+  //printf("%s\n",char1);
+  uint8_t codepoint1 = ((byte2 & 0x1F) << 6) | (byte1);
   printf("%08X\n",codepoint1);
   return 0;
 }
 
 int threeFrames(uint8_t byte1,uint8_t byte2,uint8_t byte3)
 {
-  char char2[6];
-  sprintf(char2,"%d%d%d",byte1,byte2,byte3);
-  int intframe2 = (int)strtol(char2,NULL,16);
-  uint8_t codepoint2 = (((intframe2 & 0x0F) << 12) | (((intframe2) & 0x3F) << 6) |
-  ((intframe2) & 0x3F));
+  //char char2[12];
+  //sprintf(char2,"%x%x%x",byte1,byte2,byte3);
+  //int intframe2 = (int)strtol(char2,NULL,16);
+  //printf("%s\n",char2);
+  uint8_t codepoint2 = (((byte3 & 0x0F) << 12) | (((byte2) & 0x3F) << 6) |
+  (byte1));
   printf("%08X\n",codepoint2);
   return 0;
 }
 
 int fourFrames(uint8_t byte1,uint8_t byte2,uint8_t byte3, uint8_t byte4)
 {
-  char char3[8];
-  sprintf(char3,"%d%d%d%d",byte1,byte2,byte3,byte4);
-  int intframe3 = (int)strtol(char3,NULL,16);
-  uint8_t codepoint3 = (((intframe3 & 0x07) << 18) | ((intframe3 & 0x3F) << 12) |
-  ((intframe3 & 0x3F) <<  6) | ((intframe3 & 0x3F)));
+  //char char3[32];
+  //sprintf(char3,"%x%x%x%x",byte1,byte2,byte3,byte4);
+  //int intframe3 = (int)strtol(char3,NULL,16);
+  //printf("%s\n",char3);
+  uint8_t codepoint3 = (((byte4 & 0x07) << 18) | ((byte3 & 0x3F) << 12) |
+  ((byte2 & 0x3F) <<  6) | (byte1));
   printf("%08X\n",codepoint3);
   return 0;
 }
@@ -135,8 +138,8 @@ int main ( void )
       {
         fourFrames(buffer[i],buffer[i+1],buffer[i+2],buffer[i+3]);
       }
-      //printf("%X\n",buffer[i]);
     }
   }
   return 0;
 }
+
